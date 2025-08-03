@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicago Language Data Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="scenes-container">
+        <div id="intro-scene">
+            <h1>Chicago Language Data Visualization</h1>
+            <p>This visualization explores the languages spoken in Chicago's diverse community areas. The 
+                data is sourced from the 2010 U.S. Census Bureau 2008-2012 American Community Survey 
+                via the Chicago Data Portal. The data describes the most common language spoken other than English
+                by community area, the percentage that speak this second most common language who "speak English less
+                than very well", and the estimated number of people who speak another language other than the 
+                second most common language. Slides 1 and 2 show the top 10 community areas in Chicago where Spanish 
+                and Polish are spoken, respectively, based on the percentage of the population. Slide 3 allows you 
+                to select a language from a dropdown menu to see estimated population that speak that language by
+                community area.
+                <br><br>
+            <p>Click the start button to begin the visualization. Click your browser's refresh button to start over.</p>
+            </p>
+            <div class="controls">
+                <button id="start">Start</button>
+            </div>
+            <p>
+                References:
+                <ul>
+                    <li><a href="https://data.cityofchicago.org/Health-Human-Services/Census-Data-Languages-spoken-in-Chicago-2008-2012/a2fk-ec6q/about_data">Chicago Data Portal</a></li>
+                </ul>
+                <br><br>
+                By Natalie Reid, CS 416 Narrative Visualization Final Project, Summer 2025.
+            </p>
+        </div>
+        <div id="first-scene">
+            <p>This visualization shows the top 10 community areas in Chicago where Spanish is spoken, ordered by the percentage of the population. Spanish is the most
+                commonly spoken language in Chicago after English, with 22.7% of residents speaking it at home as their second language.
+            </p>
+            <div class="controls">
+                <button id ="next1">Next</button>
+            </div>
+        </div>
+        <div id="second-scene">
+            <p>This visualization shows the top 10 community areas in Chicago where Polish is spoken, ordered by the percentage of the population. Polish is the third
+                most commonly spoken language in Chicago after English and Spanish, and it is estimated that around 2% of Chicago residents speak Polish.
+            </p>
+            <div class="controls">
+                <button id ="next2">Next</button>
+            </div>
+        </div>
+        <div id="third-scene">
+            <p>Now it's your turn! Use the dropdown below to select a language or language family. The graph will update to show the estimate population of Chicago
+                residents that speak that language by community area. Hover over the bars to see the exact number of people that speak that language in each community area, 
+                as well as the second most common language in that community area, for comparison. Community areas with no data or where the language is not spoken will not be shown in the graph. 
+            </p>
+                <div id="tooltip" class="tooltip"></div>
+                <svg class="chart" id="scene3-chart">                 
+                </svg>
+                <div class="dropdown">
+                    <label for="language-select">Select Language:</label>
+                    <select id="language-select">
+                        <option value="AFRICAN LANGUAGES">AFRICAN LANGUAGES</option>
+                        <option value="ARABIC">ARABIC</option>
+                        <option value="ARMENIAN">ARMENIAN</option>
+                        <option value="CAMBODIAN (MON-KHMER)">CAMBODIAN (MON-KHMER)</option>
+                        <option value="CHINESE">CHINESE</option>
+                        <option value="CREOLE">CREOLE</option>
+                        <option value="FRENCH">FRENCH</option>
+                        <option value="GERMAN">GERMAN</option>
+                        <option value="GREEK">GREEK</option>
+                        <option value="GUJARATI">GUJARATI</option>
+                        <option value="HEBREW">HEBREW</option>
+                        <option value="HINDI">HINDI</option>
+                        <option value="HMONG">HMONG</option>
+                        <option value="HUNGARIAN">HUNGARIAN</option>
+                        <option value="ITALIAN">ITALIAN</option>
+                        <option value="JAPANESE">JAPANESE</option>
+                        <option value="KOREAN">KOREAN</option>
+                        <option value="LAOTIAN">LAOTIAN</option>
+                        <option value="NAVAJO">NAVAJO</option>
+                        <option value="OTHER ASIAN">OTHER ASIAN</option>
+                        <option value="OTHER INDIC">OTHER INDIC</option>
+                        <option value="OTHER INDO EURPOEAN">OTHER INDO EURPOEAN</option>
+                        <option value="OTHER PACIFIC ISLAND">OTHER PACIFIC ISLAND</option>
+                        <option value="OTHER SLAVIC">OTHER SLAVIC</option>
+                        <option value="OTHER WEST GERMANIC">OTHER WEST GERMANIC</option>
+                        <option value="PERSIAN">PERSIAN</option>
+                        <option value="POLISH">POLISH</option>
+                        <option value="PORTUGUESE">PORTUGUESE</option>
+                        <option value="RUSSIAN">RUSSIAN</option>
+                        <option value="SCANDINAVIAN">SCANDINAVIAN</option>
+                        <option value="SERBO-CROATIAN">SERBO-CROATIAN</option>
+                        <option value="SPANISH">SPANISH</option>
+                        <option value="TAGALOG">TAGALOG</option>
+                        <option value="THAI">THAI</option>
+                        <option value="UNSPECIFIED">UNSPECIFIED</option>
+                        <option value="URDU">URDU</option>
+                        <option value="VIETNAMESE">VIETNAMESE</option>
+                        <option value="YIDDISH">YIDDISH</option>
+                    </select>
+                </div>
+        </div>
+
+    </div>
+    <script>
+
+        let currentScene = 0;
+        let currentLanguage = "SPANISH"
+        const scenes = ["intro-scene", "first-scene", "second-scene", "third-scene"];
+
+        drawIntroScene();
+
+        document.getElementById("start").addEventListener("click", function() {
+            document.getElementById(scenes[currentScene]).style.display = "none";
+            currentScene++;
+            document.getElementById(scenes[currentScene]).style.display = "block";
+            currentLanguage = "SPANISH";
+            drawBarChartScene();
+        });
+
+        document.getElementById("next1").addEventListener("click", function() {
+            document.getElementById(scenes[currentScene]).style.display = "none";
+            currentScene++;
+            document.getElementById(scenes[currentScene]).style.display = "block";
+            currentLanguage = "POLISH";
+            drawBarChartScene();
+        });
+
+        document.getElementById("next2").addEventListener("click", function() {
+            document.getElementById(scenes[currentScene]).style.display = "none";
+            currentScene++;
+            document.getElementById(scenes[currentScene]).style.display = "block";
+            drawThirdScene();
+        });
+
+        function drawIntroScene() {
+            const introScene = document.getElementById("intro-scene");
+            introScene.style.display = "block";
+            document.getElementById("first-scene").style.display = "none";
+            document.getElementById("second-scene").style.display = "none";
+            document.getElementById("third-scene").style.display = "none";
+        }
+
+        function drawBarChartScene() {   
+            
+            const margin = {top: 30, right: 30, bottom: 70, left: 60},
+            width = 800 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom;
+            
+            const svg = d3.select(`#${scenes[currentScene]}`).append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom +130)
+                .append("g")
+                .attr("transform", `translate(${margin.left}, ${margin.top + 100})`);
+            
+        
+                d3.csv("Chicago Language Data.csv").then( function(data) {
+                    data.sort(function(b, a) {
+                        return a.percentage - b.percentage;
+                    });
+
+                    data = data.filter(d => d.language == currentLanguage);
+                    data = data.slice(0, 5);
+
+                    const x = d3.scaleBand()
+                        .range([0, width])
+                        .domain(data.map(d => d.communityArea ))
+                        .padding(0.1);
+                    svg.append("g")
+                        .attr("transform", `translate(0, ${height})`)
+                        .call(d3.axisBottom(x))
+                        .selectAll("text")
+                        .attr("transform", "translate(-10,0)rotate(-45)")
+                        .style("text-anchor", "end");;
+
+                    svg.append("text")
+                        .attr("x", width / 2)
+                        .attr("y", height + margin.bottom +20)
+                        .style("text-anchor", "middle")
+                        .text(`Top 5 Community Areas for ${currentLanguage} Speakers`);
+
+                    const y = d3.scaleLinear()
+                        .domain([0, d3.max(data, d => +d.percentage)])
+                        .range([height, 0]);
+                    svg.append("g")
+                        .call(d3.axisLeft(y));
+
+                    svg.append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 0 - margin.left)
+                        .attr("x", 0 - (height / 2))
+                        .attr("dy", "1em")
+                        .style("text-anchor", "middle")
+                        .text("Percentage of Population");
+
+                    svg.selectAll("mybar")
+                        .data(data)
+                        .enter()
+                        .append("rect")
+                        .attr("x", d => x(d.communityArea))
+                        .attr("y", d => y(+d.percentage))
+                        .attr("width", x.bandwidth())
+                        .attr("height", d => height - y(+d.percentage))
+                        .attr("fill", "#021c45");
+
+                    let annotations = [];
+
+                    annotations = [
+                        {
+                            note: {
+                                label: `Community Area: ${data[0].communityArea} has the highest percentage of ${currentLanguage} speakers in Chicago.<br>
+                                        Percentage of Population: ${data[0].percentage}%<br>`,
+                                align: "middle",
+                                wrap: 200,
+                                bgPadding: 10
+                            },
+                            x: x(data[0].communityArea) + x.bandwidth() / 2,
+                            y: y(+data[0].percentage) - 10,
+                            dy: -30,
+                            dx: 0
+                        }
+                    ]
+
+                    const makeAnnotations = d3.annotation()
+                        .type(d3.annotationLabel)
+                        .annotations(annotations);
+                    
+                    svg.append("g")
+                        .attr("class", "annotation-group")
+                        .call(makeAnnotations);
+
+                })
+            .catch(error => {
+                console.error("Error loading the CSV data:", error);
+            });
+        }
+
+        function drawThirdScene() {
+            document.getElementById("first-scene").style.display = "none";
+            document.getElementById("second-scene").style.display = "none";
+            document.getElementById("third-scene").style.display = "block";
+
+            const margin = {top: 30, right: 30, bottom: 70, left: 60},
+            width = 1200 - margin.left - margin.right,
+            height = 700 - margin.top - margin.bottom;
+            
+            const svg = d3.select("#scene3-chart")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom +50)
+                .append("g")
+                .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+            const tooltip = d3.select("#tooltip")
+                .style("opacity", 0)
+                .style("background-color", "white")
+                .style("border", "1px solid black")
+                .style("padding", "10px");
+
+            const selectedLanguage = document.getElementById("language-select");
+
+            selectedLanguage.addEventListener("change", (event) => {
+                const selected = event.target.value;
+
+                svg.selectAll("*").remove(); // Clear previous chart
+
+                
+
+                d3.csv("Chicago Language Data.csv").then(function(data) {
+                    data = data.filter(d => d[selected] != 0);
+                    data.sort(function(b, a) {
+                        return a[selected] - b[selected];
+                    });
+
+                    data = data.slice(0, 10);
+
+                    const x = d3.scaleBand()
+                        .range([0, width])
+                        .domain(data.map(d => d.communityArea))
+                        .padding(0.1);
+                    svg.append("g")
+                        .attr("transform", `translate(0, ${height})`)
+                        .call(d3.axisBottom(x))
+                        .selectAll("text")
+                        .attr("transform", "translate(-10,0)rotate(-45)")
+                        .style("text-anchor", "end");
+
+                    svg.append("text")
+                        .attr("x", width / 2)
+                        .attr("y", height + margin.bottom +20)
+                        .style("text-anchor", "middle")
+                        .text(`Top 5 Community Areas for ${selectedLanguage.value} Speakers`);
+
+                    const y = d3.scaleLinear()
+                        .domain([0, d3.max(data, d => +d[selected])])
+                        .range([height, 0]);
+                    svg.append("g")
+                        .call(d3.axisLeft(y));
+
+                    svg.append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 0 - margin.left)
+                        .attr("x", 0 - (height / 2))
+                        .attr("dy", "1em")
+                        .style("text-anchor", "middle")
+                        .text("Number of Speakers");
+
+
+                    svg.selectAll("mybar")
+                        .data(data)
+                        .enter()
+                        .append("rect")
+                        .attr("x", d => x(d.communityArea))
+                        .attr("y", d => y(+d[selected]))
+                        .attr("width", x.bandwidth())
+                        .attr("height", d => height - y(+d[selected]))
+                        .attr("fill", "#021c45")
+                        .attr("pointer-events", "all")
+                        .on("mouseover", function(event, d) {
+                            d3.select(this).attr("stroke", "black").attr("stroke-width", 1.5);
+                            tooltip.transition().duration(100).style("opacity", 1);
+                            tooltip
+                                .html(`Community Area: ${d.communityArea}<br>
+                                       ${selected}: ${d[selected]}<br>
+                                       Second Most Common Language: ${d.language}<br>`)
+                                .style("left", (event.pageX + 10) + "px")
+                                .style("top", (event.pageY - 20) + "px");})
+                        .on("mouseout", function() {
+                            d3.select(this).attr("stroke", "none");
+                            tooltip.transition().duration(300).style("opacity", 0);
+                        });
+                });
+             });
+                
+        }
+        
+        
+        
+        
+    </script>
+</body>
+</html>

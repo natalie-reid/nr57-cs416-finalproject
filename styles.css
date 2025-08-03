@@ -1,0 +1,78 @@
+body{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1{
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.scenes-container{
+    max-width: 1200px;
+    max-height: 1000px;
+    margin: 0 auto;
+    background-color: rgb(250, 225, 228);
+    padding: 30px;
+    padding-bottom: 60px;
+}
+
+.controls{
+    text-align: center;
+    margin-top: 20px;
+}
+
+button#start{
+    padding: 5px;
+    font-size: 16px;
+    background-color: lightcyan;
+    margin: 0 auto;
+    text-align: center;
+}
+
+button#next1{
+    padding: 5px;
+    font-size: 16px;
+    background-color: lightcyan;
+    margin: 0 auto;
+    text-align: center;
+}
+
+button#next2{
+    padding: 5px;
+    font-size: 16px;
+    background-color: lightcyan;
+    margin: 0 auto;
+    text-align: center;
+}
+
+select#language-select{
+    padding: 5px;
+    font-size: 16px;
+    background-color: lightcyan;
+    margin: 0 auto;
+}
+
+.tooltip {
+    position: absolute;
+    height: 70px;
+    width: 350px;
+    background-color: lightcyan;
+}
+
+.annotation-group .annotation text {
+    font-size: 11px;
+    margin-right: 5px;
+}
+        
+.annotation-group .annotation-note-bg {
+    fill: white;
+    fill-opacity: 0.9;
+    stroke: #ccc;
+    stroke-width: 1;
+}
+        
+.annotation-group .annotation path {
+    stroke: #333;
+    stroke-width: 2;
+}
