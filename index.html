@@ -292,7 +292,7 @@
                         .attr("x", width / 2)
                         .attr("y", height + margin.bottom +20)
                         .style("text-anchor", "middle")
-                        .text(`Top 5 Community Areas for ${selectedLanguage.value} Speakers`);
+                        .text(`Top 10 Community Areas for ${selectedLanguage.value} Speakers`);
 
                     const y = d3.scaleLinear()
                         .domain([0, d3.max(data, d => +d[selected])])
